@@ -167,8 +167,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // #define BUTTON_NEED_PULLUP // if set we need to turn on the internal CPU pullup during sleep
 
-#define I2C_SDA 21
-#define I2C_SCL 22
+#define I2C_SDA 0
+#define I2C_SCL 4
 
 #define BUTTON_PIN 38     // The middle button GPIO on the T-Beam
 #define BUTTON_PIN_ALT 13 // Alternate GPIO for an external button if needed
