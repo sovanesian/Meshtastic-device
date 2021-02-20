@@ -48,13 +48,19 @@ class Router : protected concurrency::OSThread
     virtual int32_t runOnce();
 
     /**
-     * Works like send, but if we are sending to the local node, we directly put the message in the receive queue
+     * Works like send, but if we are sending to the local node, we directly put the message in the receive queue.
+     * This is the primary method used for sending packets, because it handles both the remote and local cases.
      *
      * NOTE: This method will free the provided packet (even if we return an error code)
      */
     ErrorCode sendLocal(MeshPacket *p);
 
-    /// Allocate and return a meshpacket which defaults as send to broadcast from the current node.
+    /** Attempt to cancel a previously sent packet.  Returns true if a packet was found we could cancel */
+    bool cancelSending(NodeNum from, PacketId id);    
+
+    /** Allocate and return a meshpacket which defaults as send to broadcast from the current node.
+     * The returned packet is guaranteed to have a unique packet ID already assigned
+     */
     MeshPacket *allocForSending();
 
     /**
@@ -92,6 +98,11 @@ class Router : protected concurrency::OSThread
      */
     bool perhapsDecode(MeshPacket *p);
 
+    /**
+     * Send an ack or a nak packet back towards whoever sent idFrom
+     */
+    void sendAckNak(ErrorReason err, NodeNum to, PacketId idFrom);
+    
   private:
     /**
      * Called from loop()
